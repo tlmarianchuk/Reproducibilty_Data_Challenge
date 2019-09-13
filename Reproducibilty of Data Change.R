@@ -71,3 +71,11 @@ sowbugs_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normsowbugs)
   geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_sowbugs), linetype='dashed', colour='green') +  
   geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_sowbugs),colour='green', shape=0, size = 3)
 sowbugs_plot
+
+
+#PLotting same graph but with dLGP data
+sowbug_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normsowbug)) +
+  geom_point(size = 3) + xlab("") + ylab("") +
+  geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_sowbug), linetype="dotted", colour='red') +  
+  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_sowbug),colour='red', shape=0, size = 3)
+sowbug_plot
