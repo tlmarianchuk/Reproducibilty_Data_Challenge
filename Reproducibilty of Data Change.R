@@ -34,14 +34,16 @@ cdat$p_dLGP_spider <- dLGP(cdat$k_number_of_arthropods,theta = mean_of_spiders,l
 spider_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normspider)) +
   geom_point(size = 3) + xlab("") + ylab("") + 
   geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_spider), linetype='dashed', colour='green') +  
-  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_spider),colour='green', shape=0, size = 3)
+  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_spider),colour='green', shape=0, size = 3) +
+  labs(title = "Spider data with Poisson") + theme(plot.title = element_text(hjust = 0.5))
 spider_plot
 
 #PLotting same graph but with dLGP data
 spider_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normspider)) +
   geom_point(size = 3) + xlab("") + ylab("") +
   geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_spider), linetype="dotted", colour='red') +  
-  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_spider),colour='red', shape=0, size = 3)
+  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_spider),colour='red', shape=0, size = 3) +
+  labs(title = "Spider data with dLGP") + theme(plot.title = element_text(hjust = 0.5))
 spider_plot
 
 
@@ -69,13 +71,15 @@ cdat$p_dLGP_sowbugs <- dLGP(cdat$k_number_of_arthropods,theta = mean_of_sowbugs,
 sowbugs_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normsowbugs)) +
   geom_point(size = 3) + xlab("") + ylab("") + 
   geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_sowbugs), linetype='dashed', colour='green') +  
-  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_sowbugs),colour='green', shape=0, size = 3)
+  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_sowbugs),colour='green', shape=0, size = 3) +
+  labs(title = "Sowbug data with Poisson") + theme(plot.title = element_text(hjust = 0.5))
 sowbugs_plot
 
 
 #PLotting same graph but with dLGP data
-sowbug_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normsowbug)) +
+sowbug_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normsowbugs)) +
   geom_point(size = 3) + xlab("") + ylab("") +
-  geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_sowbug), linetype="dotted", colour='red') +  
-  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_sowbug),colour='red', shape=0, size = 3)
+  geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_sowbugs), linetype="dotted", colour='red') +  
+  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_sowbugs),colour='red', shape=0, size = 3) +
+  labs(title = "Sowbug data with dLGP") + theme(plot.title = element_text(hjust = 0.5))
 sowbug_plot
