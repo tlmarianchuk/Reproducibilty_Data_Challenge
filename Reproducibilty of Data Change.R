@@ -1,70 +1,73 @@
+
 #Reproducibility Data Challenge
 
+library(RMKdiscrete)
 library(readr)
 library(ggplot2)
 library(dplyr)
-
-mdat <- read.csv("mitchell_weevil_egg_data_1975.csv")
-cdat <- read.csv("cole_arthropod_data_1946.csv")
-
-mdat <- as.data.frame(mdat)
-cdat <- as.data.frame(cdat)
-
-#ggplot( dpois( x=0:159, lambda=13.33 )) + ggplot(normd)
-
-#scatter
-plot(0:30, dpois( x=0:30, lambda=13.33))
-a <- aes(x = k_number_of_arthropods , y = C_count_of_boards_with_k_spiders)
-p <- ggplot(cdat,a) + geom_point() + plot(0:30, dpois( x=0:30, lambda=13.33))
-print(p)
-
-#histogram
-a <- aes(C_count_of_boards_with_k_spiders)
-p <- ggplot(cdat, a) + geom_histogram()
-print(p)
-normden <- function(x){dnorm(x, mean=13.33, sd=sqrt(13.33))}
-curve(normden, from=0, to=30, add=TRUE, col="red")
+library(reshape2)
 
 
+mdat <- read.csv("~/Documents/BSD-QBio5/tutorials/reproducibility/data/mitchell_weevil_egg_data_1975.csv")
+cdat <- read.csv("~/Documents/BSD-QBio5/tutorials/reproducibility/data/cole_arthropod_data_1946.csv")
 
-p <- ggplot(cdat, a) + geom_point(x = cdat$k_number_of_arthropods, y = cdat$C_count_of_boards_with_k_spiders)
-print(p)
-normden <- function(x){dnorm(x, mean=13.33, sd=sqrt(13.33))}
-curve(normden, from=0, to=30, add=TRUE, col="red")
-normden <- function(x){dnorm(x, mean=13.33, sd=sqrt(13.33))}
-curve(normden, from=0, to=30, add=TRUE, col="red")
+head(mdat)
+head(cdat)
 
-normden <- function(x){dnorm(x, mean=13.33, sd=sqrt(13.33))}
-curve(normden, from=0, to=30, add=TRUE, col="red")
-#
-# ggplot(data.frame(x=c(0:10)), aes(x)) +
-#   stat_function(geom="point", n=11, fun=dpois, args=list(1))
+## Spiders
 
+#Determine and set the number of boards, count the spiders, and get mean of spiders per board
+cdat$nspiders <- cdat$k_number_of_arthropods * cdat$C_count_of_boards_with_k_spiders
+mean_of_spiders <- sum(cdat$nspiders) / sum(cdat$C_count_of_boards_with_k_spiders)
+sum_of_boards <- sum(cdat$C_count_of_boards_with_k_spiders)
 
-#fit poisson distr to tbl$Freq data
-poisson = fitdist(cdat$C_count_of_boards_with_k_spiders, 'pois', method = 'mle')
-print(poisson)
-
-#plot
-plot(cdat$C_count_of_boards_with_k_spiders, cdat$Freq, type = 'h', ylim = c(0,10), ylab = 'No. of years with x events', 
-     xlab = 'No. of events in a year', main = 'All 13-day events with Poisson')
+#Set up new dataframe that contains the Poisson Distribution numbers and determine probability from data alone
+cdat$p_spider <- dpois(cdat$k_number_of_arthropods,lambda = mean_of_spiders)
+cdat$p_normspider <- cdat$C_count_of_boards_with_k_spiders / sum(cdat$C_count_of_boards_with_k_spiders)
 
 
-dist = dpois(1:10, lambda = 4)
-dist = dist * sum(df$Freq)
-dist = as.data.frame(dist)
-dist$Var1 = df$Var1
+#dLGP step for setting curve for the additional graph requested
+cdat$p_dLGP_spider <- dLGP(cdat$k_number_of_arthropods,theta = mean_of_spiders,lambda = 0,nc=NULL,log=FALSE)
 
-lines(dist$Var1, dist$dist, lwd = 2)
 
-#Plotting same graph but with dLGP data
+#Plotting first graph with Poisson distribution and data
+spider_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normspider)) +
+  geom_point(size = 3) + xlab("") + ylab("") + 
+  geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_spider), linetype='dashed', colour='green') +  
+  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_spider),colour='green', shape=0, size = 3)
+spider_plot
+
+#PLotting same graph but with dLGP data
 spider_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normspider)) +
   geom_point(size = 3) + xlab("") + ylab("") +
   geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_spider), linetype="dotted", colour='red') +  
   geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_dLGP_spider),colour='red', shape=0, size = 3)
 spider_plot
 
+
+
+
+## Sowbugs
+
+
+
 #Determine and set the number of boards, count the sowbugs, and get mean of sowbugs per board
 cdat$nsowbugs <- cdat$k_number_of_arthropods * cdat$C_count_of_boards_with_k_sowbugs
-mean_of_sowbugs <- (sum(cdat$nsowbugs) / sum(cdat$C_count_of_boards_with_k_sowbugs))*(1-0.54214)
+mean_of_sowbugs <- (sum(cdat$nsowbugs) / sum(cdat$C_count_of_boards_with_k_sowbugs))*(1-.53214)
 sum_of_boards <- sum(cdat$C_count_of_boards_with_k_sowbugs)
+
+#Set up new dataframe that contains the Poisson Distribution numbers and determine probability from data alone
+cdat$p_sowbugs <- dpois(cdat$k_number_of_arthropods,lambda = mean_of_sowbugs)
+cdat$p_normsowbugs <- cdat$C_count_of_boards_with_k_sowbugs / sum(cdat$C_count_of_boards_with_k_sowbugs)
+
+
+#dLGP step for setting curve for the additional graph requested
+cdat$p_dLGP_sowbugs <- dLGP(cdat$k_number_of_arthropods,theta = mean_of_sowbugs,lambda = .53214,nc=NULL,log=FALSE)
+
+
+#Plotting first graph with Poisson distribution and data
+sowbugs_plot <- ggplot(cdat, aes(x=cdat$k_number_of_arthropods, y=p_normsowbugs)) +
+  geom_point(size = 3) + xlab("") + ylab("") + 
+  geom_line(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_sowbugs), linetype='dashed', colour='green') +  
+  geom_point(data=cdat, aes(x=cdat$k_number_of_arthropods, y=p_sowbugs),colour='green', shape=0, size = 3)
+sowbugs_plot
